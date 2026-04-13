@@ -3,10 +3,487 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>hellofs</title>
+  <title>世杰宇宙 · 搞怪入口</title>
+  <style>
+    :root {
+      --bg1: #0f1021;
+      --bg2: #1d1135;
+      --bg3: #2d1e2f;
+      --pink: #ff4fa3;
+      --yellow: #ffe66d;
+      --blue: #7ee7ff;
+      --green: #8bffb0;
+      --white: #f8f9ff;
+      --card: rgba(255,255,255,0.12);
+      --border: rgba(255,255,255,0.2);
+      --shadow: 0 20px 50px rgba(0,0,0,0.28);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at top left, rgba(255,79,163,0.22), transparent 24%),
+        radial-gradient(circle at top right, rgba(126,231,255,0.18), transparent 22%),
+        linear-gradient(135deg, var(--bg1), var(--bg2) 45%, var(--bg3));
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+    .floating-tag {
+      position: fixed;
+      z-index: 1;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: var(--shadow);
+      animation: float 5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .tag-a { top: 20px; left: 18px; color: var(--yellow); }
+    .tag-b { top: 110px; right: 20px; color: var(--blue); animation-delay: .8s; }
+    .tag-c { top: 360px; left: 10px; color: var(--green); animation-delay: 1.4s; }
+    .tag-d { bottom: 26px; right: 20px; color: #ffc6ff; animation-delay: 2s; }
+    @keyframes float { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-10px) rotate(1deg); } }
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 24px;
+      align-items: stretch;
+      z-index: 2;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+    .hero-main {
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      right: -60px;
+      top: -60px;
+      background: radial-gradient(circle, rgba(255,230,109,0.3), transparent 68%);
+      filter: blur(8px);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 14px;
+    }
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(34px, 6vw, 72px);
+      line-height: 1.02;
+      letter-spacing: 1px;
+    }
+    .hero-desc {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.9);
+      max-width: 720px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .stat {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(9, 12, 30, 0.32);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+    .toolbar {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    }
+    button:hover { transform: translateY(-2px); }
+    .primary { background: linear-gradient(135deg, #ff4fa3, #ff7b54); color: #fff; box-shadow: 0 12px 24px rgba(255,79,163,0.25); }
+    .secondary { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.15); }
+    .hero-side {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      position: relative;
+    }
+    .photo-box {
+      position: relative;
+      overflow: hidden;
+      border-radius: 26px;
+      min-height: 430px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-sticker {
+      position: absolute;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: var(--shadow);
+    }
+    .sticker-1 { top: 16px; left: 14px; transform: rotate(-8deg); color: var(--yellow); }
+    .sticker-2 { right: 12px; top: 72px; transform: rotate(9deg); color: var(--blue); }
+    .sticker-3 { bottom: 16px; left: 18px; transform: rotate(-6deg); color: #ffc6ff; }
+    .meter {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(10,12,24,0.34);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .bar {
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.08);
+    }
+    .bar > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #7ee7ff, #8bffb0, #ffe66d, #ff4fa3);
+      width: 97%;
+    }
+    .section {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      position: relative;
+      z-index: 2;
+    }
+    .card { padding: 24px; }
+    .card h2 { margin: 0 0 16px; font-size: 28px; }
+    .list {
+      display: grid;
+      gap: 12px;
+    }
+    .list-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      line-height: 1.7;
+    }
+    .muted { color: rgba(255,255,255,0.72); }
+    .comment-box {
+      margin-top: 22px;
+      padding: 28px;
+      position: relative;
+      z-index: 3;
+      border: 2px solid rgba(255,230,109,0.36);
+      box-shadow: 0 0 0 4px rgba(255,230,109,0.08), var(--shadow);
+    }
+    .comment-box h2 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      color: var(--yellow);
+    }
+    .comment-form {
+      display: grid;
+      grid-template-columns: 180px 1fr 140px;
+      gap: 12px;
+      margin: 18px 0 18px;
+    }
+    input, textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 15px;
+      outline: none;
+    }
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+      grid-column: 1 / -2;
+    }
+    .submit-wrap {
+      display: flex;
+      align-items: stretch;
+    }
+    .comment-note {
+      margin: 0 0 14px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.8;
+    }
+    .comments {
+      display: grid;
+      gap: 14px;
+    }
+    .comment {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: rgba(10,12,24,0.34);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .comment-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .comment-content {
+      line-height: 1.8;
+      color: rgba(255,255,255,0.92);
+    }
+    .marquee {
+      margin-top: 22px;
+      overflow: hidden;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+      white-space: nowrap;
+    }
+    .marquee span {
+      display: inline-block;
+      padding: 12px 0;
+      animation: marquee 22s linear infinite;
+      font-weight: 700;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .footer {
+      text-align: center;
+      margin-top: 22px;
+      color: rgba(255,255,255,0.68);
+      font-size: 14px;
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 12px 18px;
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 999px;
+      z-index: 10;
+      transition: .25s ease;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    @media (max-width: 920px) {
+      .hero, .section { grid-template-columns: 1fr; }
+      .photo-box { min-height: 360px; }
+      .comment-form { grid-template-columns: 1fr; }
+      textarea { grid-column: auto; }
+      .submit-wrap { display: block; }
+      .stats { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello GitHub Pages</h1>
-  <p>世杰大帝万古不灭！！！！！！</p>
+  <div class="floating-tag tag-a">世杰雷达：已锁定 😏</div>
+  <div class="floating-tag tag-b">今日搞怪指数：99.99%</div>
+  <div class="floating-tag tag-c">友情提示：请勿严肃浏览</div>
+  <div class="floating-tag tag-d">本页面由抽象美学驱动</div>
+
+  <div class="wrap">
+    <section class="hero">
+      <div class="panel hero-main">
+        <div class="badge">🎭 世杰专属入口 · 正在散发离谱魅力</div>
+        <h1>欢迎来到<br>世杰搞怪宇宙</h1>
+        <p class="hero-desc">
+          这里不是普通个人主页，这里是世杰表情管理失控后的纪念馆。你将看到：离谱笑容、随机能量、一本正经的胡说八道，以及一个被我故意做得很显眼的评论区。整个页面纯前端运行，不访问任何后端接口。
+        </p>
+        <div class="stats">
+          <div class="stat"><strong id="laughValue">100%</strong><span class="muted">嘴角上扬幅度</span></div>
+          <div class="stat"><strong id="energyValue">∞</strong><span class="muted">世杰能量库存</span></div>
+          <div class="stat"><strong id="weirdValue">9.9/10</strong><span class="muted">抽象艺术等级</span></div>
+        </div>
+        <div class="toolbar">
+          <button class="primary" id="boostBtn">点击领取今日世杰能量</button>
+          <button class="secondary" id="factBtn">生成一条离谱介绍</button>
+        </div>
+        <div class="marquee">
+          <span>　世杰大帝微笑认证 · 看见这个表情的人今天都容易笑出声 · 评论区很显眼，别装看不见 · 页面没有后端，只有快乐 · 世杰大帝微笑认证 · 看见这个表情的人今天都容易笑出声 · 评论区很显眼，别装看不见 · 页面没有后端，只有快乐　</span>
+        </div>
+      </div>
+
+      <aside class="panel hero-side">
+        <div class="photo-box">
+          <img src="./shijie.png" alt="世杰搞怪照片">
+          <div class="photo-sticker sticker-1">今日笑容：超标</div>
+          <div class="photo-sticker sticker-2">警告：表情过于生动</div>
+          <div class="photo-sticker sticker-3">请勿在喝水时直视</div>
+        </div>
+        <div class="meter">
+          <strong>世杰气场进度条</strong>
+          <div class="bar"><span></span></div>
+          <div class="muted">系统评估：该笑容已接近“把会议室气氛带偏”的危险等级。</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="panel card">
+        <h2>世杰今日设定</h2>
+        <div class="list">
+          <div class="list-item">身份：<strong>表情包型人格选手</strong>，擅长把正常照片变成现场气氛发动机。</div>
+          <div class="list-item">特长：<strong>笑到让旁边的人怀疑发生了什么好事</strong>，并持续输出不合时宜但十分有效的欢乐感。</div>
+          <div class="list-item">副作用：访问本页后，<strong>嘴角可能出现非自愿上扬</strong>，属于正常页面反馈。</div>
+        </div>
+      </div>
+      <div class="panel card">
+        <h2>奇奇怪怪小功能</h2>
+        <div class="list">
+          <div class="list-item">“领取世杰能量”按钮：会随机刷新页面里的离谱指标，但不会真的给你涨工资。</div>
+          <div class="list-item">“生成离谱介绍”按钮：会吐出一条新的世杰宇宙设定，适合截图留念。</div>
+          <div class="list-item">评论区：<strong>显眼、固定、可前端假装发布</strong>，当前不接任何接口，不落库，不打扰后端。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel comment-box">
+      <h2>世杰留言墙</h2>
+      <p class="comment-note">
+        这是本页面最显眼的区域。下面先放几条写死的评论，同时保留一个纯前端的“假装发布”体验：点击发布后只会临时显示在当前页面，不会调用后端，也不会真的保存。
+      </p>
+
+      <div class="comment-form">
+        <input id="nameInput" type="text" value="匿名围观群众" maxlength="20" placeholder="你的昵称">
+        <div class="submit-wrap"><button class="primary" id="commentBtn">假装发布评论</button></div>
+        <textarea id="commentInput" placeholder="请留下你对世杰笑容的专业评价，例如：这张图让我周一也有了活力。"></textarea>
+      </div>
+
+      <div class="comments" id="commentsList">
+        <article class="comment">
+          <div class="comment-head"><span>气氛组组长</span><span class="muted">刚刚</span></div>
+          <div class="comment-content">这个表情我愿称之为“会议前五分钟还很严肃，结果突然集体笑场”的启动器。</div>
+        </article>
+        <article class="comment">
+          <div class="comment-head"><span>不愿透露姓名的同事</span><span class="muted">1 分钟前</span></div>
+          <div class="comment-content">建议把这张图设成每日打卡背景，迟到的人看一眼都不好意思继续emo。</div>
+        </article>
+        <article class="comment">
+          <div class="comment-head"><span>路过的互联网用户</span><span class="muted">5 分钟前</span></div>
+          <div class="comment-content">本来只是点进来看看，结果在评论区和这个笑容之间来回切换了三次，页面目标达成。</div>
+        </article>
+      </div>
+    </section>
+
+    <div class="footer">© 世杰搞怪网址 · 纯静态页面 · 评论功能当前为前端演示版</div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const weirdFacts = [
+      '系统检测到：世杰今日适合担任“快乐扩散器”，范围 5 米内有效。',
+      '温馨提示：该笑容属于高能表情，请勿在憋笑场景中反复观看。',
+      '内部评测结果：世杰的离谱亲和力已经超出普通网页承载范围。',
+      '已为你生成一句评价：这不是照片，这是情绪稳定器的反向版本。',
+      '世杰宇宙更新日志：修复了太严肃的问题，新增了更夸张的笑意。'
+    ];
+
+    const boostBtn = document.getElementById('boostBtn');
+    const factBtn = document.getElementById('factBtn');
+    const toast = document.getElementById('toast');
+    const laughValue = document.getElementById('laughValue');
+    const energyValue = document.getElementById('energyValue');
+    const weirdValue = document.getElementById('weirdValue');
+    const commentBtn = document.getElementById('commentBtn');
+    const commentInput = document.getElementById('commentInput');
+    const nameInput = document.getElementById('nameInput');
+    const commentsList = document.getElementById('commentsList');
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    boostBtn.addEventListener('click', () => {
+      laughValue.textContent = Math.floor(90 + Math.random() * 11) + '%';
+      energyValue.textContent = ['∞', '999+', '超载', '满格', '爆棚'][Math.floor(Math.random() * 5)];
+      weirdValue.textContent = (9 + Math.random()).toFixed(1) + '/10';
+      showToast('已领取世杰能量，今日抽象值上升。');
+    });
+
+    factBtn.addEventListener('click', () => {
+      showToast(weirdFacts[Math.floor(Math.random() * weirdFacts.length)]);
+    });
+
+    commentBtn.addEventListener('click', () => {
+      const name = (nameInput.value || '匿名围观群众').trim().slice(0, 20);
+      const text = commentInput.value.trim();
+      if (!text) {
+        showToast('先写点内容，再来夸世杰。');
+        return;
+      }
+      const safeName = name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const article = document.createElement('article');
+      article.className = 'comment';
+      article.innerHTML = `
+        <div class="comment-head"><span>${safeName}</span><span class="muted">刚刚 · 前端演示</span></div>
+        <div class="comment-content">${safeText}</div>
+      `;
+      commentsList.prepend(article);
+      commentInput.value = '';
+      showToast('评论已假装发布成功，没有访问任何后端接口。');
+    });
+  </script>
 </body>
 </html>
